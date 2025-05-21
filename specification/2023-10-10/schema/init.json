@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/emqx/mqtt-file-transfer-schema/blob/v1.1.0/init.json",
+  "title": "init",
+  "description": "Schema for payload of the init message",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "A descriptive name for display",
+      "type": "string"
+    },
+    "expire_at": {
+      "description": "File expiration time as UNIX Epoch. After this point in time broker can delete the file.",
+      "type": "integer"
+    },
+    "size": {
+      "description": "Total file size in bytes, optional.",
+      "type": "integer"
+    },
+    "segments_ttl": {
+      "description": "Time-to-live (in seconds) for segments of incomplete file transfer. The deadline of for broker to collect all segments is calculated from InitTime + TTL, where InitTime is the time when broker receives the init message. Broker will garbage collect segments of unfinished transfers when this time expires. If not set, broker will use its own default value.",
+      "type": "integer"
+    },
+    "checksum": {
+      "description": "SHA-256 checksum of the file, optional",
+      "type": "string",
+      "maxLength": 32
+    },
+    "user_data": {
+      "description": "User-defined metadata.",
+      "type": "object"
+    }
+  },
+  "required": [ "name", "expire_at" ]
+}
