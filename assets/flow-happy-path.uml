@@ -1,0 +1,50 @@
+@startuml
+!theme blueprint
+Client -> Client: generate UUID=8568BA42-..
+Client -> Broker: PUBLISH('$file/8568BA42-../init')
+note right
+{
+  "name": "ml-logs-data.log",
+  "expire_at": 1696659943
+  "size": 3075
+}
+end note
+Broker --> Client: PUBACK 0x00
+Client -> Client: read segment #0, calculate sha256
+Client -> Broker: PUBLISH('$file/8568BA42-../0/{sha256}')
+note right
+Payload: <binary blob 1kB>
+end note
+Broker -> Broker: verify checksum - ok
+Broker -> Broker: store logs/data-log at 0, 1kB
+Broker --> Client: PUBACK 0x00
+Client -> Client: read segment #1, calculate sha256
+Client -> Broker: PUBLISH('$file/8568BA42-../1024/{sha256}')
+note right
+Payload: <binary blob 1kB>
+end note
+Client -> Client: read segment #2, calculate sha256
+Client -> Broker: PUBLISH('$file/8568BA42-../2048/{sha256}')
+note right
+Payload: <binary blob 1kB>
+end note
+Client -> Client: read segment #3, calculate sha256
+Client -> Broker: PUBLISH('$file/8568BA42-../3072/{sha256}')
+note right
+Payload: <binary blob 3 bytes>
+end note
+Broker -> Broker: verify checksum - ok
+Broker -> Broker: verify checksum - ok
+Broker -> Broker: verify checksum - ok
+Broker -> Broker: store logs/data-log at 1024, 2051 bytes
+Broker --> Client: PUBACK 0x00
+Broker --> Client: PUBACK 0x00
+Broker --> Client: PUBACK 0x00
+Client -> Broker: PUBLISH('$file/8568BA42-../fin/3075/{sha256}')
+Broker -> Broker: verify checksum - ok
+Broker -> Broker: finalize logs/data-log
+Broker -> Storage: upload logs/data-log
+Storage --> Broker: upload ok
+Broker --> Client: PUBACK 0x00
+Broker --> Broker: cleanup
+@enduml

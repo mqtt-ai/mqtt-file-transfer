@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/emqx/mqtt-file-transfer-schema/blob/v1.1.0/response.json",
+  "title": "init",
+  "description": "Schema for file transfer command responses",
+  "type": "object",
+  "properties": {
+    "vsn": {
+      "description": "Version of the response format",
+      "type": "string"
+    },
+    "topic": {
+      "description": "The topic of the command that the response is for",
+      "type": "string"
+    },
+    "packet_id": {
+      "description": "The MQTT packet id of the command packet that the response is for",
+      "type": "integer"
+    },
+    "reason_code": {
+      "description": "The result code of the command execution",
+      "type": "integer"
+    },
+    "reason_description": {
+      "description": "The human-readable description of the result code",
+      "type": "string"
+    },
+  },
+  "required": [ "vsn", "topic", "packet_id", "reason_code", "reason_description" ]
+}
